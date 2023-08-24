@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Book book;
         BookStore bookStore = new BookStore();
         Scanner scanner = new Scanner(System.in);
 
@@ -42,6 +43,40 @@ public class Main {
                         // Добавление книги
                         System.out.print("Введите название книги: ");
                         String title = scanner.nextLine();
+                        if (!bookStore.getBooks().containsKey(title)) {
+                            System.out.println("Введите имя автора: ");
+                            String author = scanner.nextLine();
+                            System.out.println("Введите название издательства: ");
+                            String publisher = scanner.nextLine();
+                            System.out.println("Введите количество страниц: ");
+                            int pageCount = scanner.nextInt();
+                            System.out.println("Введите жанр книги: ");
+                            String genre = scanner.nextLine();
+                            System.out.println("Введите год издания: ");
+                            int year = scanner.nextInt();
+                            System.out.println("Введите себестоимость книги: ");
+                            double costPrice = scanner.nextDouble();
+                            System.out.println("Введите цену для продажи: ");
+                            double sellingPrice = scanner.nextDouble();
+                            System.out.println("Является ли книга продолжением? (да/нет): ");
+                            boolean isContinuation = false;
+                            int a = 1;
+                            while (a == 1){
+                                if (scanner.hasNext("да")) {
+                                    isContinuation = true;
+                                    a++;
+                                } else if (scanner.hasNext("нет")) {
+                                    isContinuation = false;
+                                    a--;
+                                } else {
+                                    System.out.println("Является ли книга продолжением? (да/нет): ");
+                                }
+                            }
+                            book = new Book(title, author, publisher, pageCount, genre, year, costPrice, sellingPrice, isContinuation);
+                            bookStore.addBook(book);
+                        } else {
+                            System.out.println("Книга уже существует в библиотеке.");
+                        }
                         // Здесь можно запросить остальные параметры книги у пользователя
                         // Book book = new Book(title, author, publisher, pageCount, genre, year, costPrice, sellingPrice, isContinuation);
                         // bookStore.addBook(book);

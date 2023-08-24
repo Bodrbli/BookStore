@@ -8,6 +8,10 @@ class BookStore {
         books = new HashMap<>();
     }
 
+    public Map<String, Book> getBooks() {
+        return books;
+    }
+
     public void addBook(Book book) {
 
     }
