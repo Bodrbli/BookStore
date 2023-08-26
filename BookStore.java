@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 class BookStore {
     private Map<String, Book> books;
@@ -65,7 +62,7 @@ class BookStore {
         }
     }
 
-    public void editBook(String title) throws IOException{
+    public void editBook(String title) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         if (books.containsKey(title)) {
             Book book = books.get(title);
@@ -73,7 +70,12 @@ class BookStore {
             System.out.println(book.toString());
             try {
                 String edit = reader.readLine();
-                if (edit.equals("Автор")) {
+                if (edit.equals("Название")) {
+                    System.out.println("Введите название: ");
+                    String newTitle = reader.readLine();
+                    book.setTitle(newTitle);
+                    books.put(newTitle, books.remove(title));
+                } else if (edit.equals("Автор")) {
                     System.out.println("Введите автора: ");
                     String newAuthor = reader.readLine();
                     book.setAuthor(newAuthor);
@@ -105,11 +107,13 @@ class BookStore {
                     System.out.println("Книга является продолжением?: ");
                     boolean newIsContinue = reader.readLine().equals("Да")? true: false;
                     book.setContinuation(newIsContinue);
+                } else {
+                    System.out.println("Вы ввели неверные данные.");
                 }
-            } catch (Exception e) {
+                //reader.close();
+            } catch (NumberFormatException | IOException a) {
                 System.out.println("Вы ввели неверные данные.");
             }
-            reader.close();
             System.out.println("Параметры книги успешно отредактированы.");
         } else {
             System.out.println("Книга не найдена в магазине.");
@@ -123,6 +127,61 @@ class BookStore {
         } else {
             System.out.println("Книга не найдена в магазине.");
         }
+    }
+    public void searchBook() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Выберите параметр поиска:\n" +
+                            "1. По названию книги\n" +
+                            "2. По автору\n" +
+                            "3. По жанру");
+        try {
+
+        int choice = Integer.parseInt(reader.readLine());
+
+        switch (choice) {
+            case 1 -> {
+                System.out.println("Введите название книги:");
+                String title = reader.readLine();
+                if (books.containsKey(title)) {
+                    System.out.println(books.get(title).toString());
+                } else {
+                    System.out.println("Книга не найдена.");
+                }
+            }
+            case 2 -> {
+                System.out.println("Введите имя автора:");
+                String author = reader.readLine();
+                List<Book> authorSortBook = books.values().stream().filter(x -> x.getAuthor().equals(author)).toList();
+                for (Book b : authorSortBook) {
+                    System.out.println(b.getTitle());
+                }
+            }
+            case 3 -> {
+                System.out.println("Введите жанр:");
+                String genre = reader.readLine();
+                List<Book> genreSortBook = books.values().stream().filter(x -> x.getGenre().equals(genre)).toList();
+                for (Book b : genreSortBook) {
+                    System.out.println(b.getTitle() + " " + b.getAuthor() + " " + b.getGenre());
+                }
+            }
+            default -> System.out.println("Неверный выбор, попробуйте снова.");
+            }
+            //reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void listOfNewBook() {
+        int year = 2023;
+        List<Book> newBook = books.values().stream().filter( x -> x.getYear()==year).toList();
+        for (Book b : newBook) {
+            System.out.println(b.toString());
+        }
+    }
+    public void addBookToStock(String title) {
+        Book book = books.get(title);
+        BookStock bookStock = new BookStock();
+        bookStock.getStockBook().add(book);
     }
 
     // Остальные методы для функциональностей приложения

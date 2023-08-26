@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -6,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Book book;
         BookStore bookStore = new BookStore();
-        Scanner scanner = new Scanner(System.in);;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         // Логин и пароль для входа
         String login = "admin";
@@ -14,9 +16,9 @@ public class Main {
 
         // Вход в приложение
         System.out.print("Введите логин: ");
-        String enteredLogin = scanner.nextLine();
+        String enteredLogin = reader.readLine();
         System.out.print("Введите пароль: ");
-        String enteredPassword = scanner.nextLine();
+        String enteredPassword = reader.readLine();
 
         if (enteredLogin.equals(login) && enteredPassword.equals(password)) {
             // Вывод главного меню
@@ -37,14 +39,14 @@ public class Main {
             int choice;
             do {
                 System.out.print("Выберите действие: ");
-                choice = scanner.nextInt();
-                scanner.nextLine(); // Чтение символа новой строки после считывания числа
+                choice = Integer.parseInt(reader.readLine());
+                //reader.readLine(); // Чтение символа новой строки после считывания числа
 
                 switch (choice) {
                     case 1:
                         // Добавление книги
                         System.out.print("Введите название книги: ");
-                        String title = scanner.nextLine();
+                        String title = reader.readLine();
                         book = bookStore.getBookFields(title);
                         if (book != null) {
                             bookStore.addBook(book);
@@ -53,24 +55,26 @@ public class Main {
                     case 2:
                         // Удаление книги
                         System.out.print("Введите название книги: ");
-                        title = scanner.nextLine();
+                        title = reader.readLine();
                         bookStore.removeBook(title);
                         break;
                     case 3:
                         // Редактирование параметров книги
                         System.out.print("Введите название книги: ");
-                        title = scanner.nextLine();
+                        title = reader.readLine();
                         bookStore.editBook(title);
                         break;
                     case 4:
                         // Продажа книги
                         System.out.print("Введите название книги: ");
-                        title = scanner.nextLine();
+                        title = reader.readLine();
                         bookStore.sellBook(title);
                         break;
                     case 5:
                         // Включение книги в акцию
-                        // ...
+                        System.out.print("Введите название книги: ");
+                        title = reader.readLine();
+                        bookStore.addBookToStock(title);
                         break;
                     case 6:
                         // Отложить книгу для покупателя
@@ -78,11 +82,11 @@ public class Main {
                         break;
                     case 7:
                         // Поиск книги
-                        // ...
+                        bookStore.searchBook();
                         break;
                     case 8:
                         // Просмотр списка новинок
-                        // ...
+                        bookStore.listOfNewBook();
                         break;
                     case 9:
                         // Просмотр списка самых продаваемых книг
