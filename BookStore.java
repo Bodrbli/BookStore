@@ -62,7 +62,7 @@ class BookStore {
         }
     }
 
-    public void editBook(String title) throws IOException {
+    public void editBook(String title) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         if (books.containsKey(title)) {
             Book book = books.get(title);
@@ -105,12 +105,11 @@ class BookStore {
                     book.setCostPrice(newSellPrice);
                 } else if (edit.equals("Продолжение")) {
                     System.out.println("Книга является продолжением?: ");
-                    boolean newIsContinue = reader.readLine().equals("Да")? true: false;
+                    boolean newIsContinue = reader.readLine().equals("Да");
                     book.setContinuation(newIsContinue);
                 } else {
                     System.out.println("Вы ввели неверные данные.");
                 }
-                //reader.close();
             } catch (NumberFormatException | IOException a) {
                 System.out.println("Вы ввели неверные данные.");
             }
@@ -128,7 +127,7 @@ class BookStore {
             System.out.println("Книга не найдена в магазине.");
         }
     }
-    public void searchBook() throws IOException {
+    public void searchBook() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Выберите параметр поиска:\n" +
                             "1. По названию книги\n" +
@@ -166,7 +165,6 @@ class BookStore {
             }
             default -> System.out.println("Неверный выбор, попробуйте снова.");
             }
-            //reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -179,9 +177,22 @@ class BookStore {
         }
     }
     public void addBookToStock(String title) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Book book = books.get(title);
-        BookStock bookStock = new BookStock();
+
+        int discount = 0;
+
+        try {
+            System.out.println("Введите размер скидки:");
+            discount = Integer.parseInt(reader.readLine());
+
+        } catch (IOException e) {
+            throw new RuntimeException();
+        }
+        BookStock bookStock = new BookStock(discount);
+        bookStock.setBookPrice(book, discount);
         bookStock.getStockBook().add(book);
+        System.out.println(bookStock);
     }
 
     // Остальные методы для функциональностей приложения
