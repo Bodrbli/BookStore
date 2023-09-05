@@ -1,24 +1,30 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         Book book;
         BookStore bookStore = new BookStore();
+        UserAccount userAccount = null;
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-        // Логин и пароль для входа
-        String login = "admin";
-        String password = "password";
-
         // Вход в приложение
-        System.out.print("Введите логин: ");
-        String enteredLogin = reader.readLine();
-        System.out.print("Введите пароль: ");
-        String enteredPassword = reader.readLine();
+        while (userAccount == null) {
+            System.out.print("Введите логин: ");
+            String enteredLogin = reader.readLine();
+            System.out.print("Введите пароль: ");
+            String enteredPassword = reader.readLine();
+            try {
+                userAccount = UserAccount.Accounts.findUser(enteredLogin, enteredPassword);
+            }catch (NoSuchElementException e) {
+                System.out.println("Неверные имя пользователя или пароль!");
+            }
+        }
 
-        if (enteredLogin.equals(login) && enteredPassword.equals(password)) {
+
             // Вывод главного меню
             System.out.println("МЕНЮ:\n" +
                     "1. Добавить книгу\n" +
@@ -75,7 +81,9 @@ public class Main {
                         break;
                     case 6:
                         // Отложить книгу для покупателя
-                        // ...
+                        System.out.print("Введите название книги: ");
+                        title = reader.readLine();
+                        bookStore.addToWaitingList(title);
                         break;
                     case 7:
                         // Поиск книги
@@ -105,8 +113,5 @@ public class Main {
                         System.out.println("Неверный выбор. Попробуйте снова.");
                 }
             } while (choice != 0);
-        } else {
-            System.out.println("Неверный логин или пароль.");
-        }
     }
 }

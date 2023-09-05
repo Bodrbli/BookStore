@@ -4,10 +4,17 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 class BookStore {
-    private Map<String, Book> books;
-
-    public BookStore() {
+    private static Map<String, Book> books;
+    static {
         books = new HashMap<>();
+        books.put("Книга джунглей", new Book("Книга джунглей", "Киплинг", "Macmillan Publishers", 358, "повесть", 1894, 284.45, 350, false));
+        books.put("Вторая книга джунглей", new Book("Вторая книга джунглей", "Киплинг", "Macmillan Publishers", 405, "роман", 1895, 275.15, 350, true));
+        books.put("Белый клык", new Book("Белый клык", "Лондон", "Macmillan and Company", 378, "повесть", 1906, 239.40, 330, false));
+        books.put("Мартин Иден", new Book("Мартин Иден", "Лондон", "Macmillan Publishers", 417, "драма", 1909, 217.35, 300, false));
+        books.put("Клан Кречета", new Book("Клан Кречета", "Торстон", "Армада", 345, "фантастика", 1995, 265.05, 300, false));
+    }
+    public BookStore() {
+
     }
 
     public Map<String, Book> getBooks() {
@@ -150,7 +157,7 @@ class BookStore {
             case 2 -> {
                 System.out.println("Введите имя автора:");
                 String author = reader.readLine();
-                List<Book> authorSortBook = books.values().stream().filter(x -> x.getAuthor().equals(author)).toList();
+                List<Book> authorSortBook = books.values().stream().filter(x -> x.getAuthor().equalsIgnoreCase(author)).toList();
                 for (Book b : authorSortBook) {
                     System.out.println(b.getTitle());
                 }
@@ -158,7 +165,7 @@ class BookStore {
             case 3 -> {
                 System.out.println("Введите жанр:");
                 String genre = reader.readLine();
-                List<Book> genreSortBook = books.values().stream().filter(x -> x.getGenre().equals(genre)).toList();
+                List<Book> genreSortBook = books.values().stream().filter(x -> x.getGenre().equalsIgnoreCase(genre)).toList();
                 for (Book b : genreSortBook) {
                     System.out.println(b.getTitle() + " " + b.getAuthor() + " " + b.getGenre());
                 }
@@ -192,9 +199,26 @@ class BookStore {
         BookStock bookStock = new BookStock(discount);
         bookStock.setBookPrice(book, discount);
         bookStock.getStockBook().add(book);
+        System.out.println("Книга добавлена в акцию.");
         System.out.println(bookStock);
     }
+    public String addToWaitingList(String title){
+        Book book = books.get(title);
+        if (book != null) {
+            WaitingList.waitingForSell.add(book);
+            return "Книга ожидает клиента.";
+        }
+        return "Книга отсутствует";
+    }
 
+
+    public static class WaitingList {
+        private static ArrayList<Book> waitingForSell = new ArrayList<>();
+
+        public static ArrayList<Book> getWaitingForSell() {
+            return waitingForSell;
+        }
+    }
     // Остальные методы для функциональностей приложения
     // ...
 }
